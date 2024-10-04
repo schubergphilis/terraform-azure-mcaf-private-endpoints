@@ -1,5 +1,5 @@
-# terraform-azure-mcaf-naming
-Terraform module to generate names according to a convention.
+# terraform-azure-mcaf-private-endpoints
+Terraform module to generate private endpoints.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements

@@ -3,7 +3,7 @@ terraform {
 }
 
 module "private_endpoints" {
-  source = "github.com/schubergphilis/terraform-azure-mcaf-private-endpoints?ref=v0.2.0"
+  source = "github.com/schubergphilis/terraform-azure-mcaf-private-endpoints?ref=v0.1.0"
 
   resource_group_name = "rg-private-endpoints"
   location            = "Sweden Central"

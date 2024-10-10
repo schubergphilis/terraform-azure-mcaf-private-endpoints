@@ -1,7 +1,7 @@
 run "basic" {
   variables {
     resource_group_name = "rg-private-endpoints"
-    location            = "eastus"
+    location            = "Sweden Central"
 
     private_endpoints = {
       "key_vault" = {
@@ -10,7 +10,7 @@ run "basic" {
         resource_group_name            = module.az_names["core"].naming.management_governance.resource_groups
         subresource_name               = "vault"
         network_interface_name         = "keyvaultnic"
-        private_dns_zone_resource_ids  = [module.ccoe_ntwk.private_dns_zone_list["privatelink.vaultcore.azure.net"].id]
+        private_dns_zone_ids           = [module.ccoe_ntwk.private_dns_zone_list["privatelink.vaultcore.azure.net"].id]
       }
       "storage_account" = {
         private_connection_resource_id = module.ccoe_azdo.storage_account_id
@@ -18,7 +18,7 @@ run "basic" {
         resource_group_name            = module.az_names["azdo"].naming.management_governance.resource_groups
         subresource_name               = "blob"
         network_interface_name         = "storagenic"
-        private_dns_zone_resource_ids  = [module.ccoe_ntwk.private_dns_zone_list["privatelink.blob.core.windows.net"].id]
+        private_dns_zone_ids           = [module.ccoe_ntwk.private_dns_zone_list["privatelink.blob.core.windows.net"].id]
       }
     }
   }

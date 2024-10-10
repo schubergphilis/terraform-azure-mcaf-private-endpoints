@@ -83,7 +83,7 @@ variable "private_link_services" {
     }))
     tags                        = optional(map(string))
     visibility_subscription_ids = optional(set(string), [])
-    
+
   }))
   default     = {}
   nullable    = false

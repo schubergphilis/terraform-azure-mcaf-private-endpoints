@@ -3,10 +3,8 @@ terraform {
 }
 
 module "private_endpoints" {
-  source = "../.."
-
-  resource_group_name = "rg-private-endpoints"
-  location            = "eastus"
+  source   = "../.."
+  location = "eastus"
 
   private_endpoints = {
     "key_vault" = {

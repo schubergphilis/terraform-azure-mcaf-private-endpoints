@@ -3,68 +3,126 @@ variable "location" {
   type        = string
 }
 
-# source https://azure.github.io/Azure-Verified-Modules/specs/shared/interfaces/#private-endpoints
+variable "resource_group_name" {
+  description = "The resource group to deploy the resources in, can be overridden on a per resource level"
+  type        = string
+  default     = null
+}
+
 variable "private_endpoints" {
   type = map(object({
-    name = optional(string, null)
-    role_assignments = optional(map(object({
-      role_definition_id_or_name             = string
-      principal_id                           = string
-      description                            = optional(string, null)
-      skip_service_principal_aad_check       = optional(bool, false)
-      condition                              = optional(string, null)
-      condition_version                      = optional(string, null)
-      delegated_managed_identity_resource_id = optional(string, null)
-      principal_type                         = optional(string, null)
-    })), {})
-    lock = optional(object({
-      kind = string
-      name = optional(string, null)
-    }), null)
-    tags                                    = optional(map(string), null)
-    subnet_resource_id                      = string
-    subresource_name                        = string # NOTE: `subresource_name` can be excluded if the resource does not support multiple sub resource types (e.g. storage account supports blob, queue, etc)
-    private_connection_resource_id          = string
-    private_dns_zone_group_name             = optional(string, "default")
-    private_dns_zone_resource_ids           = optional(set(string), [])
-    application_security_group_associations = optional(map(string), {})
-    private_service_connection_name         = optional(string, null)
-    network_interface_name                  = optional(string, null)
-    location                                = optional(string, null)
-    resource_group_name                     = optional(string, null)
-    ip_configurations = optional(map(object({
-      name               = string
-      private_ip_address = string
-    })), {})
+    name                          = optional(string)
+    location                      = optional(string)
+    resource_group_name           = optional(string)
+    custom_network_interface_name = optional(string)
+    ip_configuration = optional(list(object({
+      name               = optional(string)
+      member_name        = optional(string)
+      private_ip_address = optional(string)
+      subresource_name   = optional(string)
+    })), [])
+    is_manual_connection              = optional(bool)
+    private_connection_resource_alias = optional(string)
+    private_connection_resource_id    = optional(string)
+    private_dns_zone_group_name       = optional(string)
+    private_dns_zone_ids              = optional(list(string), [])
+    private_service_connection_name   = optional(string)
+    request_message                   = optional(string)
+    subnet_id                         = string
+    subresource_name                  = optional(string)
+    tags                              = optional(map(string))
   }))
   default     = {}
   nullable    = false
   description = <<DESCRIPTION
-- `name` - (Optional) The name of the private endpoint. One will be generated if not set.
-- `role_assignments` - (Optional) A map of role assignments to create on the private endpoint. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time. See `var.role_assignments` for more information.
-  - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
-  - `principal_id` - The ID of the principal to assign the role to.
-  - `description` - (Optional) The description of the role assignment.
-  - `skip_service_principal_aad_check` - (Optional) If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
-  - `condition` - (Optional) The condition which will be used to scope the role assignment.
-  - `condition_version` - (Optional) The version of the condition syntax. Leave as `null` if you are not using a condition, if you are then valid values are '2.0'.
-  - `delegated_managed_identity_resource_id` - (Optional) The delegated Azure Resource Id which contains a Managed Identity. Changing this forces a new resource to be created. This field is only used in cross-tenant scenario.
-  - `principal_type` - (Optional) The type of the `principal_id`. Possible values are `User`, `Group` and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
-- `lock` - (Optional) The lock level to apply to the private endpoint. Default is `None`. Possible values are `None`, `CanNotDelete`, and `ReadOnly`.
-  - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
-  - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
-- `tags` - (Optional) A mapping of tags to assign to the private endpoint.
-- `subnet_resource_id` - The resource ID of the subnet to deploy the private endpoint in.
-- `subresource_name` - The name of the sub resource for the private endpoint.
-- `private_dns_zone_group_name` - (Optional) The name of the private DNS zone group. One will be generated if not set.
-- `private_dns_zone_resource_ids` - (Optional) A set of resource IDs of private DNS zones to associate with the private endpoint. If not set, no zone groups will be created and the private endpoint will not be associated with any private DNS zones. DNS records must be managed external to this module.
-- `application_security_group_resource_ids` - (Optional) A map of resource IDs of application security groups to associate with the private endpoint. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-- `private_service_connection_name` - (Optional) The name of the private service connection. One will be generated if not set.
-- `network_interface_name` - (Optional) The name of the network interface. One will be generated if not set based on the resource name.
-- `location` - (Optional) The Azure location where the resources will be deployed. Defaults to the location of the resource group.
-- `resource_group_name` - (Optional) The resource group where the resources will be deployed. Defaults to the resource group of the Key Vault.
-- `ip_configurations` - (Optional) A map of IP configurations to create on the private endpoint. If not specified the platform will create one. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-  - `name` - The name of the IP configuration.
-  - `private_ip_address` - The private IP address of the IP configuration.
+This object describes the private endpoint configuration.
+
+- `name` - (Optional) Specifies the Name of the Private Endpoint.
+- `location` - (Optional) The supported Azure location where the resource exists.
+- `resource_group_name` - (Optional) The resource group name.
+- `custom_network_interface_name` - (Optional) The custom name of the network interface attached to the private endpoint. Defaults to the private endpoint name with '_nic'.
+- `ip_configuration`- (Optional) This allows a static IP address to be set for this Private Endpoint, otherwise an address is dynamically allocated from the Subnet.
+  - `name` - (Optional) 
+  - `member_name` - (Optional) 
+  - `private_ip_address` - (Optional) -
+  - `subresource_name` - (Optional) 
+- `is_manual_connection` - (Optional) Does the Private Endpoint require Manual Approval from the remote resource owner? Use together with request_message.
+- `private_connection_resource_alias` - (Optional) The Service Alias of the Private Link Enabled Remote Resource which this Private Endpoint should be connected to. One of private_connection_resource_id or private_connection_resource_alias must be specified.
+- `private_connection_resource_id` - (Required) The ID of the Private Link Enabled Remote Resource which this Private Endpoint should be connected to. One of private_connection_resource_id or private_connection_resource_alias must be specified.
+- `private_dns_zone_group_name` - (Optional) Specifies the Name of the Private DNS Zone Group.
+- `private_dns_zone_ids` - (Optional) Specifies the list of Private DNS Zones to include.
+- `private_service_connection_name` - (Optional) Specifies the Name of the Private Service Connection.
+- `request_message` - (Optional) A message passed to the owner of the remote resource when the private endpoint attempts to establish the connection to the remote resource.
+- `subnet_id` - (Required) The ID of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint.
+- `subresource_name` - (Optional) A subresource name which the Private Endpoint is able to connect to, e.g. 'vault' for key vault or 'blob' for storage account. Required when not using a custom Private Link service.
+- `tags` - (Optional) A mapping of tags to assign to the resource.
+
+  Example Inputs:
+
+  ```hcl
+  private_endpoints = {
+    "blob-private-endpoint" = {
+      private_connection_resource_id = azurerm_storage_account.storage_account.id
+      subnet_id                      = azurerm_subnet.app-subnet.id
+      subresource_name               = "blob"
+    }
+  }
+  ```hcl
+DESCRIPTION
+}
+
+variable "private_link_services" {
+  type = map(object({
+    name                                        = optional(string)
+    location                                    = optional(string)
+    resource_group_name                         = optional(string)
+    auto_approval_subscription_ids              = optional(list(string), [])
+    enable_proxy_protocol                       = optional(bool)
+    fqdns                                       = optional(list(string), [])
+    load_balancer_frontend_ip_configuration_ids = list(string)
+    nat_ip_configuration = list(object({
+      name                       = optional(string)
+      primary                    = optional(bool)
+      private_ip_address         = optional(string)
+      private_ip_address_version = optional(string)
+      subnet_id                  = string
+    }))
+    tags                        = optional(map(string))
+    visibility_subscription_ids = optional(set(string), [])
+
+  }))
+  default     = {}
+  nullable    = false
+  description = <<DESCRIPTION
+This object describes the private link configuration.
+
+- `name` - (Optional) Specifies the name of this Private Link Service.
+- `location` - (Optional) The supported Azure location where the resource exists.
+- `resource_group_name` - (Optional) The resource group name.
+- `auto_approval_subscription_ids` - (Optional) A list of Subscription UUID/GUID's that will be automatically be able to use this Private Link Service.
+- `enable_proxy_protocol` - (Optional) Should the Private Link Service support the Proxy Protocol?
+- `fqdns` - (Optional) List of FQDNs allowed for the Private Link Service.
+- `load_balancer_frontend_ip_configuration_ids` - (Required) A list of Frontend IP Configuration IDs from a Standard Load Balancer, where traffic from the Private Link Service should be routed.
+- `nat_ip_configuration` - (Required)
+  - `name` - (Optional) Specifies the name which should be used for the NAT IP Configuration.
+  - `primary` - (Optional) Is this is the Primary IP Configuration?
+  - `private_ip_address` - (Optional) Specifies a Private Static IP Address for this IP Configuration.
+  - `private_ip_address_version` - (Optional) - The version of the IP Protocol which should be used.
+  - `subnet_id` - (Required) - Specifies the ID of the Subnet which should be used for the Private Link Service.
+- `visibility_subscription_ids` - (Optional)
+- `tags` - (Optional) A list of zones where this public IP should be deployed. Defaults to no zone. if you prefer, you can set other values for the zones ["1","2","3"]. Changing this forces a new resource to be created.
+
+  Example Inputs:
+
+  ```hcl
+  private_link_services = {
+    lb-private-link = {
+      load_balancer_frontend_ip_configuration_ids = [azurerm_lb.locabalancer.frontend_ip_configuration[0].id]
+      nat_ip_configuration = [{
+        subnet_id = azurerm_subnet.app-subnet.id
+      }]
+    }
+  }
+  ```hcl
 DESCRIPTION
 }

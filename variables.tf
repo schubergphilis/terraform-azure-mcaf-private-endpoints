@@ -3,6 +3,11 @@ variable "location" {
   type        = string
 }
 
+variable "resource_group_name" {
+  description = "The resource group to deploy the resources in, can be overridden on a per resource level"
+  type        = string
+}
+
 variable "private_endpoints" {
   type = map(object({
     name                          = optional(string)

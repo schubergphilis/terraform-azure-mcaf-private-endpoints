@@ -6,6 +6,7 @@ variable "location" {
 variable "resource_group_name" {
   description = "The resource group to deploy the resources in, can be overridden on a per resource level"
   type        = string
+  default     = null
 }
 
 variable "private_endpoints" {

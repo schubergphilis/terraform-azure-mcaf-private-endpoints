@@ -4,8 +4,8 @@ resource "azurerm_private_endpoint" "this" {
   name                          = each.value.name != null ? each.value.name : "${each.key}_pep"
   location                      = var.location
   resource_group_name           = each.value.resource_group_name != null ? each.value.resource_group_name : var.resource_group_name
-  subnet_id                     = each.value.subnet_resource_id
-  custom_network_interface_name = each.value.network_interface_name != null ? each.value.network_interface_name : "${regex("([^/]+)$", each.value.private_connection_resource_id)[0]}-nic"
+  subnet_id                     = each.value.subnet_id
+  custom_network_interface_name = each.value.custom_network_interface_name != null ? each.value.custom_network_interface_name : "${regex("([^/]+)$", each.value.private_connection_resource_id)[0]}-nic"
 
   private_service_connection {
     name                              = each.value.private_service_connection_name != null ? each.value.private_service_connection_name : "${each.key}_psc"

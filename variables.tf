@@ -68,8 +68,3 @@ variable "private_endpoints" {
   - `private_ip_address` - The private IP address of the IP configuration.
 DESCRIPTION
 }
-
-variable "resource_group_name" {
-  description = "The name of the resource group in which to create the virtual network."
-  type        = string
-}

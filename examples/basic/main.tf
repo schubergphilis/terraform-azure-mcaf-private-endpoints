@@ -95,7 +95,6 @@ module "private_endpoints" {
   resource_group_name = local.resource_group_name
   location            = local.location
 
-
   private_endpoints = {
     # Private endpoint example to a storage account blob using a static IP and private DNS.
     "blob-private-endpoint" = {

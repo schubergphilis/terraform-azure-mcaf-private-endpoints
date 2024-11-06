@@ -24,8 +24,8 @@ variable "private_endpoints" {
     is_manual_connection              = optional(bool)
     private_connection_resource_alias = optional(string)
     private_connection_resource_id    = optional(string)
-    private_dns_zone_group_name       = optional(string)
-    private_dns_zone_ids              = optional(list(string), [])
+    private_dns_zone_group_name             = optional(string, "default")
+    private_dns_zone_resource_ids     = optional(list(string), [])
     private_service_connection_name   = optional(string)
     request_message                   = optional(string)
     subnet_id                         = string
@@ -42,10 +42,10 @@ This object describes the private endpoint configuration.
 - `resource_group_name` - (Optional) The resource group name.
 - `custom_network_interface_name` - (Optional) The custom name of the network interface attached to the private endpoint. Defaults to the private endpoint name with '_nic'.
 - `ip_configuration`- (Optional) This allows a static IP address to be set for this Private Endpoint, otherwise an address is dynamically allocated from the Subnet.
-  - `name` - (Optional) 
-  - `member_name` - (Optional) 
+  - `name` - (Optional)
+  - `member_name` - (Optional)
   - `private_ip_address` - (Optional) -
-  - `subresource_name` - (Optional) 
+  - `subresource_name` - (Optional)
 - `is_manual_connection` - (Optional) Does the Private Endpoint require Manual Approval from the remote resource owner? Use together with request_message.
 - `private_connection_resource_alias` - (Optional) The Service Alias of the Private Link Enabled Remote Resource which this Private Endpoint should be connected to. One of private_connection_resource_id or private_connection_resource_alias must be specified.
 - `private_connection_resource_id` - (Required) The ID of the Private Link Enabled Remote Resource which this Private Endpoint should be connected to. One of private_connection_resource_id or private_connection_resource_alias must be specified.

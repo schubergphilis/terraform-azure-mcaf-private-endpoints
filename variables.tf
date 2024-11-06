@@ -24,7 +24,7 @@ variable "private_endpoints" {
     is_manual_connection              = optional(bool)
     private_connection_resource_alias = optional(string)
     private_connection_resource_id    = optional(string)
-    private_dns_zone_group_name       = optional(string)
+    private_dns_zone_group_name             = optional(string, "default")
     private_dns_zone_resource_ids     = optional(list(string), [])
     private_service_connection_name   = optional(string)
     request_message                   = optional(string)

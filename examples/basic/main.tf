@@ -90,7 +90,7 @@ resource "azurerm_lb" "loadbalancer" {
 }
 
 module "private_endpoints" {
-  source = "github.com/schubergphilis/terraform-azure-mcaf-private-endpoints?ref=add_private_link"
+  source = "github.com/schubergphilis/terraform-azure-mcaf-private-endpoints"
 
   resource_group_name = local.resource_group_name
   location            = local.location

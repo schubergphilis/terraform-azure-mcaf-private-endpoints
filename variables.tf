@@ -1,6 +1,7 @@
 variable "location" {
   description = "The location/region where the virtual network private endpoint is created."
   type        = string
+  default     = null
 }
 
 variable "resource_group_name" {

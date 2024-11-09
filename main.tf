@@ -1,7 +1,7 @@
 resource "azurerm_private_endpoint" "this" {
   for_each = var.private_endpoints
 
-  name                          = each.value.name != null ? each.value.name : "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-${each.value.subresource_name}-pep"
+  name                          = try(each.value.name, "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-${each.value.subresource_name}-pep")
   location                      = coalesce(each.value.location, var.location)
   resource_group_name           = coalesce(each.value.resource_group_name, var.resource_group_name)
   subnet_id                     = each.value.subnet_id
@@ -13,7 +13,7 @@ resource "azurerm_private_endpoint" "this" {
     private_connection_resource_alias = try(each.value.private_connection_resource_alias, null)
     private_connection_resource_id    = try(each.value.private_connection_resource_id, null)
     request_message                   = try(each.value.request_message, null)
-    subresource_names                 = try(each.value.subresource_name, null)
+    subresource_names                 = try([each.value.subresource_name], null)
   }
 
   dynamic "private_dns_zone_group" {

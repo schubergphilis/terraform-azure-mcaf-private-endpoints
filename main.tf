@@ -2,7 +2,7 @@ resource "azurerm_private_endpoint" "this" {
   for_each = var.private_endpoints
 
   name                          = each.value.name != null ? each.value.name : "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-${each.value.subresource_name}-pep"
-  location                      = var.location
+  location                      = try(each.value.location,  each.value.location, null)
   resource_group_name           = each.value.resource_group_name != null ? each.value.resource_group_name : var.resource_group_name
   subnet_id                     = each.value.subnet_id
   custom_network_interface_name = each.value.custom_network_interface_name != null ? each.value.custom_network_interface_name : "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-nic"

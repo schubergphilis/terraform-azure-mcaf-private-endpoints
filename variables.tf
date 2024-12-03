@@ -28,6 +28,7 @@ variable "private_endpoints" {
     private_dns_zone_group_name       = optional(string, "default")
     private_dns_zone_resource_ids     = optional(list(string), [])
     private_service_connection_name   = optional(string)
+    private_endpoints_manage_dns_zone_group = optional(bool, true)
     request_message                   = optional(string)
     subnet_id                         = string
     subresource_name                  = optional(string)

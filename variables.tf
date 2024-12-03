@@ -22,16 +22,17 @@ variable "private_endpoints" {
       private_ip_address = optional(string)
       subresource_name   = optional(string)
     })), [])
-    is_manual_connection              = optional(bool)
-    private_connection_resource_alias = optional(string)
-    private_connection_resource_id    = optional(string)
-    private_dns_zone_group_name       = optional(string, "default")
-    private_dns_zone_resource_ids     = optional(list(string), [])
-    private_service_connection_name   = optional(string)
-    request_message                   = optional(string)
-    subnet_id                         = string
-    subresource_name                  = optional(string)
-    tags                              = optional(map(string))
+    is_manual_connection                    = optional(bool)
+    private_connection_resource_alias       = optional(string)
+    private_connection_resource_id          = optional(string)
+    private_dns_zone_group_name             = optional(string, "default")
+    private_dns_zone_resource_ids           = optional(list(string), [])
+    private_service_connection_name         = optional(string)
+    private_endpoints_manage_dns_zone_group = optional(bool, true)
+    request_message                         = optional(string)
+    subnet_id                               = string
+    subresource_name                        = optional(string)
+    tags                                    = optional(map(string))
   }))
   default     = {}
   nullable    = false
@@ -53,6 +54,7 @@ This object describes the private endpoint configuration.
 - `private_dns_zone_group_name` - (Optional) Specifies the Name of the Private DNS Zone Group.
 - `private_dns_zone_ids` - (Optional) Specifies the list of Private DNS Zones to include.
 - `private_service_connection_name` - (Optional) Specifies the Name of the Private Service Connection.
+- `private_endpoints_manage_dns_zone_group` - (Optional) Should the Private Endpoint manage the DNS Zone Group, or manage it through azure policy for example, defaults to true.
 - `request_message` - (Optional) A message passed to the owner of the remote resource when the private endpoint attempts to establish the connection to the remote resource.
 - `subnet_id` - (Required) The ID of the Subnet from which Private IP Addresses will be allocated for this Private Endpoint.
 - `subresource_name` - (Optional) A subresource name which the Private Endpoint is able to connect to, e.g. 'vault' for key vault or 'blob' for storage account. Required when not using a custom Private Link service.
@@ -66,6 +68,7 @@ This object describes the private endpoint configuration.
       private_connection_resource_id = azurerm_storage_account.storage_account.id
       subnet_id                      = azurerm_subnet.app-subnet.id
       subresource_name               = "blob"
+      private_endpoints_manage_dns_zone_group = false
     }
   }
   ```hcl

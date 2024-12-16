@@ -51,7 +51,7 @@ resource "azurerm_private_endpoint" "this_unmanaged_dns_zone_groups" {
   location                      = coalesce(each.value.location, var.location)
   resource_group_name           = coalesce(each.value.resource_group_name, var.resource_group_name)
   subnet_id                     = each.value.subnet_id
-  custom_network_interface_name = each.value.custom_network_interface_name != null ? each.value.custom_network_interface_name : "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-nic"
+  custom_network_interface_name = each.value.custom_network_interface_name != null ? each.value.custom_network_interface_name : "${provider::azurerm::parse_resource_id(each.value.private_connection_resource_id)["resource_name"]}-${each.value.subresource_name}-nic"
 
   private_service_connection {
     name                              = each.value.private_service_connection_name != null ? each.value.private_service_connection_name : "${each.key}_psc"
